@@ -49,7 +49,7 @@ namespace Misoso.Api.Controllers
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(x => x.Errors).Select(v => v.ErrorMessage).ToList();
-                var response = new BaseResponseModel(false,errors);
+                var response = new BaseResponseModel(false, errors);
                 return BadRequest(response);
             }
 
@@ -60,12 +60,12 @@ namespace Misoso.Api.Controllers
                     return BadRequest(new BaseResponseModel(false, "Tarefa não localizada!"));
 
                 var subtaskResponse = await _subtaskItemService.CreateSubTask(request);
-                var response = new BaseResponseModel(true,subtaskResponse);
+                var response = new BaseResponseModel(true, subtaskResponse);
                 return Created("subtask", response);
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado! "+ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado! " + ex.Message);
             }
         }
 
@@ -88,11 +88,11 @@ namespace Misoso.Api.Controllers
                 var subtask = await _subtaskItemService.GetSubTaskById(request.Id);
                 if (subtask is null)
                 {
-                    var response = new BaseResponseModel(false,"Etápa não localizada!");
+                    var response = new BaseResponseModel(false, "Etápa não localizada!");
                     return NotFound(response);
                 }
                 var subtaskResponse = await _subtaskItemService.UpdateSubTask(request);
-                var responseModel = new BaseResponseModel(true,subtaskResponse);
+                var responseModel = new BaseResponseModel(true, subtaskResponse);
                 return Ok(responseModel);
             }
             catch (Exception)
@@ -111,7 +111,7 @@ namespace Misoso.Api.Controllers
                 var subtaskResponse = await _subtaskItemService.GetSubTaskById(id);
                 if (subtaskResponse is null)
                 {
-                    var response = new BaseResponseModel(false,"Etápa não localizada!");
+                    var response = new BaseResponseModel(false, "Etápa não localizada!");
                     return NotFound(response);
                 }
                 await _subtaskItemService.DeleteSubTask(subtaskResponse);
@@ -122,5 +122,81 @@ namespace Misoso.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado!");
             }
         }
+
+        [HttpPut("complete/{id:int}")]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BaseResponseModel>> CompleteSubtask([FromRoute] int id)
+        {
+            BaseResponseModel response;
+            try
+            {
+                var subtask = await _subtaskItemService.GetSubTaskById(id);
+                if (subtask is null)
+                {
+                    response = new BaseResponseModel(false, "Etápa não localizada!");
+                    return NotFound(response);
+                }
+                var completedSubtask = await _subtaskItemService.ConcludeSubTask(subtask);
+                response = new BaseResponseModel(true, completedSubtask);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                response = new BaseResponseModel(false, "Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpPut("MarkAsFocused/{id:int}")]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BaseResponseModel>> UncompleteSubtask([FromRoute] int id)
+        {
+            BaseResponseModel response;
+            try
+            {
+                var subtask = await _subtaskItemService.GetSubTaskById(id);
+                if (subtask is null)
+                {
+                    response = new BaseResponseModel(false, "Etápa não localizada!");
+                    return NotFound(response);
+                }
+                var uncompletedSubtask = await _subtaskItemService.MarkAsFocused(subtask);
+                response = new BaseResponseModel(true, uncompletedSubtask);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                response = new BaseResponseModel(false, "Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpPut("UnMarkAsFocused/{id:int}")]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BaseResponseModel>> UnMarkAsFocused([FromRoute] int id)
+        {
+            BaseResponseModel response;
+            try
+            {
+                var subtask = await _subtaskItemService.GetSubTaskById(id);
+                if (subtask is null)
+                {
+                    response = new BaseResponseModel(false, "Etápa não localizada!");
+                    return NotFound(response);
+                }
+                var toggledSubtask = await _subtaskItemService.RemoveFocused(subtask);
+                response = new BaseResponseModel(true, toggledSubtask);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                response = new BaseResponseModel(false, "Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
     }
 }
