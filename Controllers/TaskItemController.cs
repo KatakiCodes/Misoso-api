@@ -153,5 +153,80 @@ namespace Misoso.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado!");
             }
         }
+
+        [HttpPut("complete/{taskid:int}")]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BaseResponseModel>> CompleteTask(int taskid)
+        {
+            BaseResponseModel response;
+            try
+            {
+                var taskItemResponses = await _TaskItemService.GetTaskById(taskid);
+                if(taskItemResponses is null)
+                {
+                    response = new BaseResponseModel(false,"Tarefa não localizada!");
+                    return NotFound(response);
+                }
+                taskItemResponses = await _TaskItemService.ConcludeTask(taskItemResponses);
+                response = new BaseResponseModel(true,taskItemResponses);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                response = new BaseResponseModel(false,"Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
+        [HttpPut("markasfocused/{taskid:int}")]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BaseResponseModel>> MarkAsFocused(int taskid)
+        {
+            BaseResponseModel response;
+            try
+            {
+                var taskItemResponses = await _TaskItemService.GetTaskById(taskid);
+                if(taskItemResponses is null)
+                {
+                    response = new BaseResponseModel(false,"Tarefa não localizada!");
+                    return NotFound(response);
+                }
+                taskItemResponses = await _TaskItemService.MarkAsFocused(taskItemResponses);
+                response = new BaseResponseModel(true,taskItemResponses);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                response = new BaseResponseModel(false,"Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+    
+        [HttpPut("unmarkasfocused/{taskid:int}")]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BaseResponseModel>> UnMarkAsFocused(int taskid)
+        {
+            BaseResponseModel response;
+            try
+            {
+                var taskItemResponses = await _TaskItemService.GetTaskById(taskid);
+                if(taskItemResponses is null)
+                {
+                    response = new BaseResponseModel(false,"Tarefa não localizada!");
+                    return NotFound(response);
+                }
+                taskItemResponses = await _TaskItemService.RemoveFocused(taskItemResponses);
+                response = new BaseResponseModel(true,taskItemResponses);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                response = new BaseResponseModel(false,"Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
     }
 }

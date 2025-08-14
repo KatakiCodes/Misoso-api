@@ -11,15 +11,15 @@ namespace Misoso.api.Entities
         {
             Task_Id = taskId;
             Title = title;
-            Created_At = DateTime.Today;
+            Created_At = DateTime.UtcNow;
             Is_Focused = isFocused;
             Is_Concluded = false;
         }
-        public SubtaskItem(int id, int taskId, string title, bool isFocused, bool isConcluded) : base(id)
+        public SubtaskItem(int id, int taskId, string title, DateTime createdAt, bool isFocused, bool isConcluded) : base(id)
         {
             Task_Id = taskId;
             Title = title;
-            Created_At = DateTime.Today;
+            Created_At = createdAt;
             Is_Focused = isFocused;
             Is_Concluded = isConcluded;
         }

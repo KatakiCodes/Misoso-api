@@ -12,7 +12,7 @@ namespace Misoso.api.Entities
             User_Id = userId;
             Title = title;
             Description = description;
-            Created_At = DateTime.Now;
+            Created_At = DateTime.UtcNow;
             To_Finish_At = toFinishAt;
             Is_Focused = isFocused;
         }

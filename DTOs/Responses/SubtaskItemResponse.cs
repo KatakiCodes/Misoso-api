@@ -6,12 +6,12 @@ namespace Misoso.Api.DTOs.Responses
     {
         public SubtaskItemResponse()
         {}
-        public SubtaskItemResponse(int id, int taskItemId, string title, bool isFocused, bool isConcluded)
+        public SubtaskItemResponse(int id, int taskItemId, DateTime created_at, string title, bool isFocused, bool isConcluded)
         {
             Id = id;
             TaskItemId = taskItemId;
             Title = title;
-            CreatedAt = DateTime.Today;
+            CreatedAt = created_at;
             IsFocused = isFocused;
             IsConcluded = isConcluded;
         }
@@ -25,7 +25,7 @@ namespace Misoso.Api.DTOs.Responses
 
         public SubtaskItemResponse ToResponseDto(SubtaskItem entity)
         {
-            return new SubtaskItemResponse(entity.Id, entity.Task_Id, entity.Title, entity.Is_Focused, entity.Is_Concluded);
+            return new SubtaskItemResponse(entity.Id, entity.Task_Id, entity.Created_At, entity.Title, entity.Is_Focused, entity.Is_Concluded);
         }
         public void Dispose()
         {}
