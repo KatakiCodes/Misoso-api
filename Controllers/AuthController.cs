@@ -1,0 +1,41 @@
+using Microsoft.AspNetCore.Mvc;
+using Misoso.Api.DTOs.Requests;
+using Misoso.Api.DTOs.Responses;
+using Misoso.Api.Services.Interfaces;
+
+namespace Misoso.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status500InternalServerError)]
+    public class AuthController : ControllerBase
+    {
+        [HttpPost("auth")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public async Task<ActionResult<BaseResponseModel>> auth(
+            [FromServices] ITokenService tokenService,
+            [FromServices] IUserService userService,
+            [FromBody] LoginRequest loginRequest)
+        {
+            BaseResponseModel response;
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                response = new BaseResponseModel(false,errors);
+                return BadRequest(response);
+            }
+            var authUser = await userService.AuthAsync(loginRequest.Email, loginRequest.Password);
+            if (authUser is null)
+            {
+                response = new BaseResponseModel(false,"Email ou palavra-passe inválidos!");
+                return Unauthorized(response);
+            }
+
+            var token = tokenService.GenerateToken(authUser);
+            response = new BaseResponseModel(true,token);
+            return Ok(response);
+        }
+    }
+}
