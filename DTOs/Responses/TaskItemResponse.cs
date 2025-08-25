@@ -29,7 +29,7 @@ namespace Misoso.Api.DTOs.Responses
 
         public TaskItemResponse? ToResponseDto(TaskItem? entity)
         {
-            return (entity is null) ? null : new TaskItemResponse(entity.Id, entity.User_Id, entity.Title, entity.Description, entity.Created_At, entity.To_Finish_At, entity.Finished_At, entity.Is_Focused);
+            return (entity is null) ? null : new TaskItemResponse(entity.id, entity.user_id, entity.title, entity.description, entity.created_at, entity.to_finish_at, entity.finished_at, entity.is_focused);
         }
 
         public void Dispose()

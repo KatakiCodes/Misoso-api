@@ -38,7 +38,7 @@ namespace Misoso.Api.Services
         public async Task<IEnumerable<TaskItemResponse>> GetTasks(int userId)
         {
             var taskItems = await _TaskItemRepository.GetTaskItemsAsync();
-            var filterTasks = taskItems.Where(x => x.User_Id == userId).ToList();
+            var filterTasks = taskItems.Where(x => x.user_id == userId).ToList();
             var taskResponses = new List<TaskItemResponse>();
 
             foreach (var taskItem in filterTasks)

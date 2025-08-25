@@ -25,7 +25,7 @@ namespace Misoso.Api.DTOs.Responses
 
         public SubtaskItemResponse ToResponseDto(SubtaskItem entity)
         {
-            return new SubtaskItemResponse(entity.Id, entity.Task_Id, entity.Created_At, entity.Title, entity.Is_Focused, entity.Is_Concluded);
+            return new SubtaskItemResponse(entity.id, entity.task_id, entity.created_at, entity.title, entity.is_focused, entity.is_concluded);
         }
         public void Dispose()
         {}

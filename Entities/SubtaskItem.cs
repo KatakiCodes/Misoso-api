@@ -2,48 +2,48 @@
 
 namespace Misoso.api.Entities
 {
-    [Table("SUBTASKS")]
+    [Table("Subtasks")]
     public class SubtaskItem : BaseEntity
     {
         public SubtaskItem()
         {}
         public SubtaskItem(int taskId, string title, bool isFocused)
         {
-            Task_Id = taskId;
-            Title = title;
-            Created_At = DateTime.UtcNow;
-            Is_Focused = isFocused;
-            Is_Concluded = false;
+            task_id = taskId;
+            this.title = title;
+            created_at = DateTime.UtcNow;
+            is_focused = isFocused;
+            is_concluded = false;
         }
         public SubtaskItem(int id, int taskId, string title, DateTime createdAt, bool isFocused, bool isConcluded) : base(id)
         {
-            Task_Id = taskId;
-            Title = title;
-            Created_At = createdAt;
-            Is_Focused = isFocused;
-            Is_Concluded = isConcluded;
+            task_id = taskId;
+            this.title = title;
+            created_at = createdAt;
+            is_focused = isFocused;
+            is_concluded = isConcluded;
         }
-        public int Task_Id { get; private set; }
-        public string Title { get; private set; }
-        public DateTime Created_At { get; private set; }
-        public bool Is_Focused { get; private set; }
-        public bool Is_Concluded { get; private set; }
+        public int task_id { get; private set; }
+        public string title { get; private set; }
+        public DateTime created_at { get; private set; }
+        public bool is_focused { get; private set; }
+        public bool is_concluded { get; private set; }
 
         public void UpdateSubtask(string title)
         {
-            Title = title;
+            this.title = title;
         }
         public void ConcludeSubtask()
         {
-            Is_Concluded = true;
+            is_concluded = true;
         }
         public void MarkAsFocused()
         {
-            Is_Focused = true;
+            is_focused = true;
         }
         public void DisableFocused()
         {
-            Is_Focused = false;
+            is_focused = false;
         }
     }
 }
