@@ -13,17 +13,21 @@ namespace Misoso.api.Repositories
         {}
         public async Task<SubtaskItem> CreateSubtaskItemAsync(SubtaskItem subtaskItem)
         {
-            string sql = "INSERT INTO Subtasks OUTPUT INSERTED.ID VALUES (@TASK_ID, @TITLE,@CREATED_AT,@IS_CONCLUDED,@IS_FOCUSED);";
+            string sql = @"INSERT INTO Subtasks 
+                (task_id, title, created_at, is_concluded, is_focused) 
+                VALUES 
+                (@Task_Id, @Title, @Created_At, @Is_Concluded, @Is_Focused) 
+                RETURNING id;";
             var createdId = await _Connection.ExecuteScalarAsync<int>(sql,
                 new
                 {
-                    subtaskItem.Task_Id,
-                    subtaskItem.Title,
-                    subtaskItem.Created_At,
-                    subtaskItem.Is_Concluded,
-                    subtaskItem.Is_Focused,
+                    subtaskItem.task_id,
+                    subtaskItem.title,
+                    subtaskItem.created_at,
+                    subtaskItem.is_concluded,
+                    subtaskItem.is_focused,
                 }
-                );
+            );
             var subtaskResult = await _Connection.GetAsync<SubtaskItem>(createdId);
             return subtaskResult;
         }

@@ -59,9 +59,9 @@ namespace Misoso.Api.Controllers
                 response = new BaseResponseModel(true,userResponse);
                 return Created("user",response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado !" + ex.Message);
             }
         }
     }

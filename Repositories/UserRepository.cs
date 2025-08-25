@@ -14,7 +14,7 @@ namespace Misoso.api.Repositories
 
         public async Task<User> CreateUserAsync(User user)
         {
-            string sql = "INSERT INTO Users (Email, UserName, Password) OUTPUT INSERTED.ID VALUES (@Email, @UserName, @Password);";
+            string sql = "INSERT INTO Users (Email, UserName, Password) VALUES (@Email, @UserName, @Password) RETURNING id;";
             var createdId = await _Connection.ExecuteScalarAsync<int>(sql,
                 new
                 {

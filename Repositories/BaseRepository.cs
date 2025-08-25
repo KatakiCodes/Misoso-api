@@ -1,13 +1,14 @@
 using System;
 using Microsoft.Data.SqlClient;
+using Npgsql;
 
 namespace Misoso.Api.Repositories;
 
 public abstract class BaseRepository
 {
-    protected readonly SqlConnection _Connection;
+    protected readonly NpgsqlConnection _Connection;
     public BaseRepository(IConfiguration configuration)
     {
-        _Connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _Connection = new NpgsqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 }
