@@ -18,13 +18,16 @@ namespace Misoso.Api.Services
         public async Task<UserResponse?> AuthAsync(string email, string password)
         {
             var getUsers = await _UserRepository.GetUsersAsync();
-            var user = getUsers.Where(x => x.Email == email && x.Password == password).FirstOrDefault();
+            var user = getUsers.Where(x => x.Email == email).FirstOrDefault();
+            if((user is null) || (BCrypt.Net.BCrypt.Verify(password, user.Password) == false))
+                return null;
             return new UserResponse().ToResponseDto(user);
         }
 
         public async Task<UserResponse?> CreateUserAsync(CreateUserRequest userRequest)
         {
-            var user = new User(userRequest.Email, userRequest.UserName, userRequest.Password);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRequest.Password);
+            var user = new User(userRequest.Email, userRequest.UserName, passwordHash);
             var response = await _UserRepository.CreateUserAsync(user);
             return new UserResponse().ToResponseDto(response);
         }
