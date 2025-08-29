@@ -8,8 +8,8 @@ namespace Misoso.Api.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {}
 
-        public DbSet<User> Users;
-        public DbSet<TaskItem> Tasks;
-        public DbSet<SubtaskItem> SubTasks;
+        public DbSet<User> Users { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
+        public DbSet<SubtaskItem> SubTasks { get; set; }
     }
 }

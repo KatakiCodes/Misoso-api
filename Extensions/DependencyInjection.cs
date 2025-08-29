@@ -12,6 +12,7 @@ namespace Misoso.Api.Extensions
     {
         public static void AddDependencies(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddDbContext<DataContext>(option => option.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ITaskItemService, TaskItemService>();
             services.AddScoped<ISubtaskItemService, SubtaskItemService>();
@@ -19,7 +20,6 @@ namespace Misoso.Api.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITaskItemRepository, TaskITemRepository>();
             services.AddScoped<ISubtaskItemRepository, SubtaskItemRepository>();
-            services.AddDbContext<DataContext>(option => option.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Dapper;
-using Dapper.Contrib.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
 using Misoso.api.Contracts;
 using Misoso.api.Entities;
+using Misoso.Api.Data;
 using Misoso.Api.Repositories;
 using System.Data;
 
@@ -9,48 +9,36 @@ namespace Misoso.api.Repositories
 {
     public class TaskITemRepository : BaseRepository, ITaskItemRepository
     {
-        public TaskITemRepository(IConfiguration configuration) : base(configuration)
+        public TaskITemRepository(DataContext dataContext) : base(dataContext)
         { }
         public async Task<TaskItem> CreateTaskItemAsync(TaskItem taskItem)
         {
-            string sql = @"INSERT INTO Tasks 
-                (user_id, title, description, created_at, to_finish_at, finished_at, is_focused) 
-                VALUES 
-                (@User_Id, @Title, @Description, @Created_At, @To_Finish_At, @Finished_At, @Is_Focused) 
-                RETURNING id;";
-            var createdId = await _Connection.ExecuteScalarAsync<int>(sql,
-                new
-                {
-                    taskItem.user_id,
-                    taskItem.title,
-                    taskItem.description,
-                    taskItem.created_at,
-                    taskItem.to_finish_at,
-                    taskItem.finished_at,
-                    taskItem.is_focused,
-                }
-            );
-            return await GetTaskItemByIdAsync(createdId);
+            await _Context.Tasks.AddAsync(taskItem);
+            await _Context.SaveChangesAsync();
+            return taskItem;
         }
 
         public async Task DeleteTaskItemAsync(TaskItem taskItem)
         {
-            await _Connection.DeleteAsync(taskItem);
+            _Context.Tasks.Remove(taskItem);
+            await _Context.SaveChangesAsync();
         }
 
         public async Task<TaskItem?> GetTaskItemByIdAsync(int id)
         {
-            return await _Connection.GetAsync<TaskItem>(id);
+            return await _Context.Tasks.FindAsync(id);
         }
 
         public async Task<IEnumerable<TaskItem>> GetTaskItemsAsync()
         {
-            return await _Connection.GetAllAsync<TaskItem>();
+            var users = await _Context.Tasks.AsNoTracking().ToListAsync();
+            return users.AsEnumerable();
         }
 
         public async Task<TaskItem> UpdateTaskItemAsync(TaskItem taskItem)
         {
-            await _Connection.UpdateAsync(taskItem);
+            _Context.Entry<TaskItem>(taskItem).State = EntityState.Modified;
+            await _Context.SaveChangesAsync();
             return taskItem;
         }
     }
