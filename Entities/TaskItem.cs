@@ -49,7 +49,7 @@ namespace Misoso.api.Entities
         }
         public void Conclude()
         {
-            Finished_at = DateTime.Now;
+            Finished_at = DateTime.UtcNow;
         }
     }
 }
