@@ -26,16 +26,24 @@ namespace Misoso.Api.Controllers
                 response = new BaseResponseModel(false,errors);
                 return BadRequest(response);
             }
-            var authUser = await userService.AuthAsync(loginRequest.Email, loginRequest.Password);
-            if (authUser is null)
+            try
             {
-                response = new BaseResponseModel(false,"Email ou palavra-passe inválidos!");
-                return Unauthorized(response);
-            }
+                var authUser = await userService.AuthAsync(loginRequest.Email, loginRequest.Password);
+                if (authUser is null)
+                {
+                    response = new BaseResponseModel(false, "Email ou palavra-passe inválidos!");
+                    return Unauthorized(response);
+                }
 
-            var token = tokenService.GenerateToken(authUser);
-            response = new BaseResponseModel(true,token);
-            return Ok(response);
+                var token = tokenService.GenerateToken(authUser);
+                response = new BaseResponseModel(true, token);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                response = new BaseResponseModel(false, "Erro inesperado!");
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
     }
 }
