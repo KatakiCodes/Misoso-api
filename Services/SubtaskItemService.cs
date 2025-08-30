@@ -44,7 +44,7 @@ namespace Misoso.Api.Services
         {
             var subtaskItemResponses = new List<SubtaskItemResponse>();
             var subtaskList = await _Repository.GetSubtaskItemsAsync();
-            foreach (var subtaskItem in subtaskList.Where(item=>item.task_id == taskId))
+            foreach (var subtaskItem in subtaskList.Where(item=>item.Task_id == taskId))
                 subtaskItemResponses.Add(new SubtaskItemResponse().ToResponseDto(subtaskItem));
             return subtaskItemResponses.AsEnumerable();
         }

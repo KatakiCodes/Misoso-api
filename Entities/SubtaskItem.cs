@@ -9,41 +9,41 @@ namespace Misoso.api.Entities
         {}
         public SubtaskItem(int taskId, string title, bool isFocused)
         {
-            task_id = taskId;
-            this.title = title;
-            created_at = DateTime.UtcNow;
-            is_focused = isFocused;
-            is_concluded = false;
+            Task_id = taskId;
+            Title = title;
+            Created_at = DateTime.UtcNow;
+            Is_focused = isFocused;
+            Is_concluded = false;
         }
         public SubtaskItem(int id, int taskId, string title, DateTime createdAt, bool isFocused, bool isConcluded) : base(id)
         {
-            task_id = taskId;
-            this.title = title;
-            created_at = createdAt;
-            is_focused = isFocused;
-            is_concluded = isConcluded;
+            Task_id = taskId;
+            Title = title;
+            Created_at = DateTime.UtcNow;
+            Is_focused = isFocused;
+            Is_concluded = false;
         }
-        public int task_id { get; private set; }
-        public string title { get; private set; }
-        public DateTime created_at { get; private set; }
-        public bool is_focused { get; private set; }
-        public bool is_concluded { get; private set; }
+        public int Task_id { get; private set; }
+        public string Title { get; private set; }
+        public DateTime Created_at { get; private set; }
+        public bool Is_focused { get; private set; }
+        public bool Is_concluded { get; private set; }
 
         public void UpdateSubtask(string title)
         {
-            this.title = title;
+            Title = title;
         }
         public void ConcludeSubtask()
         {
-            is_concluded = true;
+            Is_concluded = true;
         }
         public void MarkAsFocused()
         {
-            is_focused = true;
+            Is_focused = true;
         }
         public void DisableFocused()
         {
-            is_focused = false;
+            Is_focused = false;
         }
     }
 }

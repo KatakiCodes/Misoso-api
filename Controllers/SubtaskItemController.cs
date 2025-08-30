@@ -63,9 +63,9 @@ namespace Misoso.Api.Controllers
                 var response = new BaseResponseModel(true, subtaskResponse);
                 return Created("subtask", response);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado! " + ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado!");
             }
         }
 

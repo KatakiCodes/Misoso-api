@@ -20,7 +20,7 @@ namespace Misoso.Api.DTOs.Responses
 
         public UserResponse? ToResponseDto(User entity)
         {
-            return (entity is null) ? null : new UserResponse(entity.id, entity.Email, entity.UserName);
+            return (entity is null) ? null : new UserResponse(entity.Id, entity.Email, entity.UserName);
         }
         public void Dispose()
         {}

@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Dapper.Contrib.Extensions;
 
 namespace Misoso.api.Entities
 {
     public abstract class BaseEntity :IEquatable<BaseEntity>
     {
-        [Key]
-        public int id { get; private set; }
+        public int Id { get; private set; }
         protected BaseEntity(int id)
         {
-            this.id = id;
+            Id = id;
         }
         protected BaseEntity()
         {}
@@ -18,7 +16,7 @@ namespace Misoso.api.Entities
         {
             if (other is null)
                 return false;
-            return this.id == other.id;
+            return Id == other.Id;
         }
     }
 }

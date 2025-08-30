@@ -1,7 +1,7 @@
-﻿using Dapper;
-using Dapper.Contrib.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
 using Misoso.api.Contracts;
 using Misoso.api.Entities;
+using Misoso.Api.Data;
 using Misoso.Api.Repositories;
 using System.Data;
 
@@ -9,36 +9,31 @@ namespace Misoso.api.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
-        public UserRepository(IConfiguration configuration) : base(configuration)
+        public UserRepository(DataContext dataContext) : base(dataContext)
         {}
 
         public async Task<User> CreateUserAsync(User user)
         {
-            string sql = "INSERT INTO Users (Email, UserName, Password) VALUES (@Email, @UserName, @Password) RETURNING id;";
-            var createdId = await _Connection.ExecuteScalarAsync<int>(sql,
-                new
-                {
-                    user.Email,
-                    user.UserName,
-                    user.Password
-                }
-            );
-            return await GetUserByIdAsync(createdId);
+            await _Context.Users.AddAsync(user);
+            await _Context.SaveChangesAsync();
+            return user;
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User?> GetUserByIdAsync(int id)
         {
-            return await _Connection.GetAsync<User>(id);
+            return await _Context.FindAsync<User>(id);
         }
 
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await _Connection.GetAllAsync<User>();
+            var users = await _Context.Users.AsNoTracking().ToListAsync();
+            return users.AsEnumerable();
         }
 
         public async Task<User> UpdateUserAsync(User user)
         {
-            await _Connection.UpdateAsync(user);
+            _Context.Entry<User>(user).State = EntityState.Modified;
+            await _Context.SaveChangesAsync();
             return user;
         }
     }

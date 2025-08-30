@@ -5,6 +5,8 @@ namespace Misoso.api.Entities
     [Table("Users")]
     public class User : BaseEntity
     {
+        public User()
+        {}
         public User(string email, string userName, string password)
         {
             Email = email;
