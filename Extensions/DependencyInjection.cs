@@ -13,11 +13,6 @@ namespace Misoso.Api.Extensions
         public static void AddDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<DataContext>(option => option.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            Console.WriteLine($"ConnectionString: {connectionString}");
-
-
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ITaskItemService, TaskItemService>();
             services.AddScoped<ISubtaskItemService, SubtaskItemService>();
