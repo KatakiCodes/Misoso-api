@@ -15,7 +15,7 @@ namespace Misoso.Api.Services
             _UserRepository = userRepository;
         }
 
-        public async Task<UserResponse?> AuthAsync(string email, string password)
+        public async Task<UserResponse?> Login(string email, string password)
         {
             var getUsers = await _UserRepository.GetUsersAsync();
             var user = getUsers.Where(x => x.Email == email).FirstOrDefault();
