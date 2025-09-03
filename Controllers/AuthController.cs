@@ -12,30 +12,31 @@ namespace Misoso.Api.Controllers
     [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status500InternalServerError)]
     public class AuthController : ControllerBase
     {
+        private readonly IAuthService _AuthService;
+        public AuthController(IAuthService authService)
+        {
+            _AuthService = authService;
+        }
+
         [HttpPost("auth")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        public async Task<ActionResult<BaseResponseModel>> auth(
-            [FromServices] ITokenService tokenService,
-            [FromServices] IUserService userService,
-            [FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<BaseResponseModel>> auth([FromBody] LoginRequest loginRequest)
         {
             BaseResponseModel response;
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                response = new BaseResponseModel(false,errors);
+                response = new BaseResponseModel(false, errors);
                 return BadRequest(response);
             }
             try
             {
-                var authUser = await userService.AuthAsync(loginRequest.Email, loginRequest.Password);
-                if (authUser is null)
+                string? token = await _AuthService.AuthAsync(loginRequest.Email, loginRequest.Password);
+                if (token is null)
                 {
                     response = new BaseResponseModel(false, "Email ou palavra-passe inválidos!");
                     return Unauthorized(response);
                 }
-
-                var token = tokenService.GenerateToken(authUser);
                 response = new BaseResponseModel(true, token);
                 return Ok(response);
             }
