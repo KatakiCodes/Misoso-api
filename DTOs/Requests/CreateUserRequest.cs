@@ -10,13 +10,15 @@ namespace Misoso.Api.DTOs.Requests
         [Required(ErrorMessage = "O nome do utilizador deve ser informado!")]
         public string UserName { get; private set; }
         [Required(ErrorMessage = "A palavra-passe do utilizador deve ser informada!")]
-        public string Password { get; private set; }
+        public string? Password { get; private set; }
+        public string? ExternalId { get; private set; }
 
-        public CreateUserRequest(string email, string userName, string password)
+        public CreateUserRequest(string email, string userName, string? password = default, string? externalId = default)
         {
             Email = email;
             UserName = userName;
             Password = password;
+            ExternalId = externalId;
         }
     }
 }

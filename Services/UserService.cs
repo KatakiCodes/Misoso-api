@@ -37,5 +37,13 @@ namespace Misoso.Api.Services
             var response = await _UserRepository.GetUserByIdAsync(userId);
             return new UserResponse().ToResponseDto(response);
         }
+
+        public async Task<UserResponse?> GetUserByExternalIdAsync(string externalId)
+        {
+            var user = await _UserRepository.GetUserByExternalIdAsync(externalId);
+            if (user is null)
+                return null;
+            return new UserResponse().ToResponseDto(user);
+        }
     }
 }

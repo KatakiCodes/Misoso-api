@@ -46,5 +46,34 @@ namespace Misoso.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
         }
+
+        [HttpPost("auth/google")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        public async Task<ActionResult<BaseResponseModel>> google([FromBody] string tokenId)
+        {
+            BaseResponseModel response;
+            if (string.IsNullOrEmpty(tokenId))
+            {
+                var errors = new List<string> { "O token do Google deve ser informado!" };
+                response = new BaseResponseModel(false, errors);
+                return Unauthorized(response);
+            }
+            try
+            {
+                string? token = await _AuthService.GoogleAuthAsync(tokenId);
+                if (token is null)
+                {
+                    response = new BaseResponseModel(false, "Token inválido!");
+                    return Unauthorized(response);
+                }
+                response = new BaseResponseModel(true, token);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response = new BaseResponseModel(false, "Erro inesperado! "+ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
     }
 }
