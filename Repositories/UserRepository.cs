@@ -19,6 +19,11 @@ namespace Misoso.api.Repositories
             return user;
         }
 
+        public async Task<User?> GetUserByExternalIdAsync(string externalId)
+        {
+            return await _Context.Users.Where(x=>x.ExternalId == externalId).FirstOrDefaultAsync();
+        }
+
         public async Task<User?> GetUserByIdAsync(int id)
         {
             return await _Context.FindAsync<User>(id);

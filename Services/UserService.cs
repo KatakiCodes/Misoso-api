@@ -15,7 +15,7 @@ namespace Misoso.Api.Services
             _UserRepository = userRepository;
         }
 
-        public async Task<UserResponse?> AuthAsync(string email, string password)
+        public async Task<UserResponse?> Login(string email, string password)
         {
             var getUsers = await _UserRepository.GetUsersAsync();
             var user = getUsers.Where(x => x.Email == email).FirstOrDefault();
@@ -36,6 +36,14 @@ namespace Misoso.Api.Services
         {
             var response = await _UserRepository.GetUserByIdAsync(userId);
             return new UserResponse().ToResponseDto(response);
+        }
+
+        public async Task<UserResponse?> GetUserByExternalIdAsync(string externalId)
+        {
+            var user = await _UserRepository.GetUserByExternalIdAsync(externalId);
+            if (user is null)
+                return null;
+            return new UserResponse().ToResponseDto(user);
         }
     }
 }

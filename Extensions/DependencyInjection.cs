@@ -14,6 +14,7 @@ namespace Misoso.Api.Extensions
         {
             services.AddDbContext<DataContext>(option => option.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITaskItemService, TaskItemService>();
             services.AddScoped<ISubtaskItemService, SubtaskItemService>();
             services.AddScoped<IUserService, UserService>();
