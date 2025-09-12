@@ -45,5 +45,14 @@ namespace Misoso.Api.Services
                 return null;
             return new UserResponse().ToResponseDto(user);
         }
+
+        public async Task<IEnumerable<UserResponse>> GetUsersAsync()
+        {
+            var usersResponse = new List<UserResponse>();
+            var users = await this._UserRepository.GetUsersAsync();
+            foreach (var user in users)
+                usersResponse.Add(new UserResponse().ToResponseDto(user));
+            return usersResponse.AsEnumerable();
+        }
     }
 }

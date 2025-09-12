@@ -17,6 +17,22 @@ namespace Misoso.Api.Controllers
             _UserService = userService;
         }
 
+        [HttpGet("")]
+        [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
+        public async Task<ActionResult<BaseResponseModel>> Users()
+        {
+            try
+            {
+                BaseResponseModel response;
+                var usersResponse = await _UserService.GetUsersAsync();
+                response = new BaseResponseModel(true,usersResponse);
+                return Ok(response);
+            }
+            catch(Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro inesperado!");
+            }
+        }
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BaseResponseModel), StatusCodes.Status404NotFound)]
