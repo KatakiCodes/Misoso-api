@@ -18,7 +18,7 @@ namespace Misoso.Api.Controllers
             _AuthService = authService;
         }
 
-        [HttpPost("auth")]
+        [HttpPost("")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public async Task<ActionResult<BaseResponseModel>> auth([FromBody] LoginRequest loginRequest)
         {
@@ -47,7 +47,7 @@ namespace Misoso.Api.Controllers
             }
         }
 
-        [HttpPost("auth/google")]
+        [HttpPost("google")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public async Task<ActionResult<BaseResponseModel>> google([FromBody] string tokenId)
         {
