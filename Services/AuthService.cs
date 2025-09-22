@@ -2,6 +2,7 @@ using System;
 using Misoso.Api.Services.Interfaces;
 using Google.Apis.Auth;
 using Misoso.Api.DTOs.Requests;
+using Misoso.Api.DTOs.Responses;
 
 namespace Misoso.Api.Services;
 
@@ -16,13 +17,13 @@ public class AuthService : IAuthService
         _IUserService = userService;
         _Configuration = configuration;
     }
-    public async Task<string?> AuthAsync(string email, string password)
+    public async Task<AuthResponse?> AuthAsync(string email, string password)
     {
         var userResponse = await _IUserService.Login(email, password);
         if (userResponse is null)
             return null;
         var token = _TokenService.GenerateToken(userResponse);
-        return token;
+        return new AuthResponse(userResponse.Email,userResponse.UserName, token);
     }
 
     public async Task<string?> GoogleAuthAsync(string tokenId)

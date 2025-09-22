@@ -18,8 +18,8 @@ namespace Misoso.Api.Controllers
             _AuthService = authService;
         }
 
-        [HttpPost("auth")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [HttpPost("")]
+        [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
         public async Task<ActionResult<BaseResponseModel>> auth([FromBody] LoginRequest loginRequest)
         {
             BaseResponseModel response;
@@ -31,13 +31,13 @@ namespace Misoso.Api.Controllers
             }
             try
             {
-                string? token = await _AuthService.AuthAsync(loginRequest.Email, loginRequest.Password);
-                if (token is null)
+                AuthResponse? auth = await _AuthService.AuthAsync(loginRequest.Email, loginRequest.Password);
+                if (auth is null)
                 {
                     response = new BaseResponseModel(false, "Email ou palavra-passe inválidos!");
                     return Unauthorized(response);
                 }
-                response = new BaseResponseModel(true, token);
+                response = new BaseResponseModel(true, auth);
                 return Ok(response);
             }
             catch (Exception)
@@ -47,7 +47,7 @@ namespace Misoso.Api.Controllers
             }
         }
 
-        [HttpPost("auth/google")]
+        [HttpPost("google")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public async Task<ActionResult<BaseResponseModel>> google([FromBody] string tokenId)
         {
