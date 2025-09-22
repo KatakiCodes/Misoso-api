@@ -6,6 +6,7 @@ namespace Misoso.Api.Services.Interfaces
     public interface IUserService
     {
         public Task<UserResponse> Login(string email, string password);
+        public Task<IEnumerable<UserResponse>> GetUsersAsync();
         public Task<UserResponse> GetUserAsync(int userId);
         public Task<UserResponse> GetUserByExternalIdAsync(string externalId);
         public Task<UserResponse> CreateUserAsync(CreateUserRequest createUserRequest);
